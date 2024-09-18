@@ -5,149 +5,60 @@ import java_assessment.model.Student;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class CourseService {
 
-    // attribute students as a Hashmap of students <id, Student>
-    HashMap<String, Student> students = new HashMap<>(); // students
+    // attribute students as a Hashmap of students <courseId, List<Student>>
+    HashMap<String, List<Student>> enrolledStudents = new HashMap<>(); // enrolledStudents
 
     // attribute courses as a Hashmap of courses <id, Course>
     HashMap<String, Course> courses = new HashMap<>();    // courses
 
     // constructor to initialise our values for students and courses
     public CourseService() {
-
+        courses.put("INTRO-CS-1", new Course("Introduction to Computer Science", "INTRO-CS-1", 9));
+        courses.put("INTRO-CS-2", new Course("Introduction to Algorithms", "INTRO-CS-2", 9));
+        courses.put("INTRO-CS-3", new Course("Algorithm Design and Problem Solving - Introduction ", "INTRO-CS-3", 9));
+        courses.put("INTRO-CS-4", new Course("Algorithm Design and Problem Solving - Advanced", "INTRO-CS-4", 9));
+        courses.put("INTRO-CS-5", new Course("Terminal Fundamentals", "INTRO-CS-5", 9));
+        courses.put("INTRO-CS-6", new Course("Source Control Using Git and Github", "INTRO-CS-6",9));
+        courses.put("INTRO-CS-7", new Course("Agile Software Development with SCRUM", "INTRO-CS-7",9));
     }
 
-    public void enrollStudents(Student[] students){
-        //TODO add all the students to the collection in courseService
-        for (Student student: students) {
-            this.students.put(student.getId(), student);
-        }
-
-        this.students.forEach((studentId, student)-> System.out.println(student));
-    }
-
-    public boolean enrollStudent(String studentId, String courseId){
+    public void enrollStudent(String courseId, Student student){
         // TODO enrol a student to a course
-        // TODO 1. create an instance of student
-        // TODO 2. create an instance of course
-        // TODO 3. enrol returned student to course
-        Student student = students.get(studentId);
-        Course course = courses.get(courseId);
-
-        if(course == null)
-            return false;
-
-        return student.enrollCourse(course);
-    }
-
-    public boolean unEnrollStudent(String studentId, String courseId){
-        // TODO 1. obtain the student by its id
-        // TODO 2. obtain the course by its id
-        // TODO 3. un-enrol a student from a course
-        Student student = students.get(studentId);
-        Course course = courses.get(courseId);
-
-        if(course == null)
-            return false;
-
-        return student.unEnrolCourse(course);
-    }
-
-    public void displayCourseInformation(String courseId){
-        // TODO printout course information
-        System.out.println(courses.get(courseId));
-    }
-
-    public void displayStudentInformation(String studentId){
-        // TODO printout student information
-        System.out.println(students.get(studentId));
-    }
-
-    public Student getStudent(String studentId){
-        // TODO return a student by its id
-        return students.get(studentId);
-    }
-
-    public void displayStudentCourseInformation(String studentId){
-        // TODO get the student and print the student's enrolled courses
-        // TODO 1. create instance of student
-        // TODO 2. call the student's method getEnrolledCourses()
-        Student student = students.get(studentId);
-
-        if(student == null)
-            System.out.println("Student Not Found.");
-
-        ArrayList<Course> results = null;
-        if (student != null) {
-            results = student.getEnrolledCourses();
+        // TODO 1. check if student is enrolled to a course
+        // TODO 2. if not, create a new course with an empty arraylist
+        // TODO 3. enrol the student to the course by Id
+        if ( !enrolledStudents.containsKey( courseId ) )
+        {
+            enrolledStudents.put( courseId, new ArrayList<>() );
         }
-
-        if (student != null) {
-            System.out.println("Student ID " + student.getId() + " enrolled into:");
-        }
-        if (results != null) {
-            results.forEach(result-> System.out.println("\t" + result));
-        }
+        enrolledStudents.get( courseId ).add( student );
     }
 
-    public void displayTotalStudentCredits(String studentId){
-        // TODO 1. create an instance of the student
-        // TODO 2. create an instance to get all courses belonging to the student
-        // TODO 3. create LOCAL variable 'total' to add up all the course credits
-        // TODO 4. add up the total credits from each course (via for-each loop)
-        Student student = students.get(studentId);
-
-        // TODO 5. If studentId does not exist, print feedback and return
-        if(student == null) {
-            System.out.println("Student Not Found.");
-            return;
-        }
-
-        ArrayList<Course> enrolledCourses = student.getEnrolledCourses();
-
-        int total = 0;
-        for (Course course: enrolledCourses) {
-            total += course.getCredit();
-        }
-
-        System.out.println("Total credits for " +
-                student.getId() + ": " +
-                total);
+    public Course getCourse(String courseId){
+        return courses.get(courseId);
     }
 
-    public int countStudents(){
-        return students.size();
-    }
-
-    public void displayStudentEnrollments(String courseId){
-        // TODO 1. get enrolled students
-        // TODO 2. get the course by courseId
-        ArrayList<Student> enrolledStudents = new ArrayList<>();
-        Course enquiredCourse = courses.get(courseId);
-
-        // TODO 3. loop through each student to find if enrolled into enquiredCourse
-        // TODO 3.1 store each student who took enquiredCourse to ArrayList enrolledStudents
-        students.forEach((studentId, student)->{
-            ArrayList<Course> enrolledCourses = student.getEnrolledCourses();
-            for (Course course: enrolledCourses) {
-                if(course.getId().equals(enquiredCourse.getId())){
-                    enrolledStudents.add(student);
-                }
+    public void showSummary()
+    {
+        System.out.println( "Available Courses:" );
+        for ( String key : courses.keySet() )
+        {
+            Course course = courses.get( key );
+            System.out.println( course );
+        }
+        System.out.println( "Enrolled Students" );
+        for ( String key : enrolledStudents.keySet() )
+        {
+            List<Student> students = enrolledStudents.get( key );
+            System.out.println( "Students on Course " + key + ": " );
+            for ( Student student : students )
+            {
+                System.out.println( student );
             }
-        });
-
-        // TODO 4: print out the list of students who took the enquiredCourse
-        System.out.println("Enrolled students for course: " + enquiredCourse.getName());
-        System.out.println("********************");
-
-        // TODO 5: loop and print out the student(s) names taking enquiredCourse
-        // enrolledStudents.forEach(student -> System.out.println(student));
-        for (Student student: enrolledStudents) {
-            System.out.println(student);
         }
-
     }
-
 }

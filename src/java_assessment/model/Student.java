@@ -77,7 +77,7 @@ public class Student {
         this.id = id;
     }
 
-    public boolean enrollCourse(Course course){
+    public boolean enrollToCourse(Course course){
         return enrolledCourses.add(course);
     }
 

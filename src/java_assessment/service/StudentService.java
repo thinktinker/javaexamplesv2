@@ -6,6 +6,7 @@ import java_assessment.model.Student;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class StudentService
 {
@@ -34,6 +35,7 @@ public class StudentService
     public void showSummary()
     {
         //TODO implement
+        students.forEach((id, student)-> System.out.println(student));
     }
 
     public void enrollToCourse( String studentId, Course course )

@@ -3,7 +3,7 @@ package java_assessment;
 import java_assessment.model.Course;
 import java_assessment.model.Student;
 import java_assessment.service.CourseService;
-//import java_assessment.service.StudentService;
+import java_assessment.service.StudentService;
 import java_assessment.utils.PrinterHelper;
 
 import java.text.ParseException;
