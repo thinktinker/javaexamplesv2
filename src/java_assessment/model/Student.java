@@ -2,10 +2,9 @@ package java_assessment.model;
 
 import java_assessment.model.Course;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
 
-public class Student {
+public class Student implements Evaluation {
     // attributes for the student
     String firstName;       // first name
     String lastName;        // last name
@@ -14,9 +13,11 @@ public class Student {
     int grade;              // grade
     String id;              // id
 
-     ArrayList<Course> enrolledCourses = new ArrayList<>();  // student's enrolled courses
+    ArrayList<Course> enrolledCourses = new ArrayList<>();          // student's enrolled courses
 
-    public Student(String firstName,                        // constructor to create an instance of a student
+    Map<String, Course> approvedCourses = new HashMap<>();          // approved courses taken by the student
+
+    public Student(String firstName,                                // constructor to create an instance of a student
                    String lastName,
                    String email,
                    Date birthDate,
@@ -78,6 +79,12 @@ public class Student {
     }
 
     public boolean enrollToCourse(Course course){
+
+        // TODO 1. if the course is not found in Hashmap approvedCourses
+        // TODO 2. put it to the student's approvedCourses
+        if(!approvedCourses.containsKey(course.getId()))            // Hashmap key:value pair
+            approvedCourses.put(course.getId(), course);
+
         return enrolledCourses.add(course);
     }
 
@@ -113,4 +120,47 @@ public class Student {
                 "id':'" +
                 id + "'}";
     }
+
+    @Override
+    public double getAverage() {
+        return 0;
+    }
+
+    @Override
+    public List<Course> getApprovedCourses() {
+
+        // TODO implement this method
+        // TODO 1. return the list of courses that are found in approved courses
+        ArrayList<Course>approvedCourses=new ArrayList<>();
+        boolean status = approvedCourses.addAll(this.approvedCourses.values());
+
+        if(status==false)
+        {
+            return null;
+        }
+
+        return approvedCourses;
+    }
+
+    public boolean isApproved(String courseId){
+        return approvedCourses.containsKey(courseId);
+    }
+
+    public boolean isAttendingCourse(String courseId){
+        //TODO return true if the student is attending the course by courseId
+        //TODO use enrolledCourses to determine if the student is attending
+
+        boolean result = false;
+
+        Course course = approvedCourses.get(courseId);
+
+        for (int i = 0; i < enrolledCourses.size(); i++) {
+            if(course == enrolledCourses.get(i)){
+                result = true;
+                break;
+            }
+        }
+        return result;
+    }
+
 }
